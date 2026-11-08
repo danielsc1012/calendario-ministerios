@@ -1,0 +1,24 @@
+{
+  "anio": 2027,
+  "ministerios": [
+    { "id": "worship", "nombre": "Worship", "color": "#00babc", "tinta": "#00565a",
+      "equipos": [
+        { "id": "Band", "pco": ["Band"] },
+        { "id": "Vocals", "pco": ["Vocals"] },
+        { "id": "Sound", "pco": ["Sound"] }
+      ] },
+    { "id": "experience", "nombre": "Experience", "color": "#5cbef3", "tinta": "#052f45",
+      "equipos": [
+        { "id": "Projection", "pco": ["Projection", "ProPresenter"] },
+        { "id": "Lights", "pco": ["Lights"] },
+        { "id": "Livestream/Camera Ops", "pco": ["Livestream/Camera Ops"] }
+      ] }
+  ],
+  "servicios": [
+    { "nombre": "1er servicio dominical", "dia": 0, "inicio": "10:00", "fin": "11:30" },
+    { "nombre": "2do servicio dominical", "dia": 0, "inicio": "12:00", "fin": "13:30" },
+    { "nombre": "Servicio Entre Semana", "dia": 3, "inicio": "19:00", "fin": "20:30" }
+  ],
+  "iglesia": { "owner": "danielsc1012", "repo": "calendario-northwood", "archivo": "eventos.json",
+               "pages": "https://danielsc1012.github.io/calendario-northwood/eventos.json" }
+}

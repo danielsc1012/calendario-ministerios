@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendario de Ministerios</title>
+<meta name="description" content="Eventos de los ministerios de Iglesia Northwood sobre el calendario de la iglesia">
+<meta property="og:title" content="Calendario de Ministerios · Northwood 2027">
+<meta property="og:description" content="Ensayos, salidas y retiros de cada ministerio, junto a los eventos de la iglesia.">
+<meta name="theme-color" content="#00babc">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6f6; --card:#ffffff; --ink:#1c1e1e; --body:#4a4d4d; --muted:#6e7272; --line:#dcdede; --soft:#eef0f0;
+  --svc:#e6f8f8; --hol:#fff0de; --hol-ink:#a03c16;
+  --church:#1c1e1e; --church-ink:#ffffff; --group:#c4491d; --group-ink:#ffffff;
+  --hi:#a03c16; --hi-bg:#fdefea; --md:#7a5200; --md-bg:#fff4d6; --lo:#4a4d4d; --lo-bg:#eef0f0;
+  --accent:#00696b; --sel:#000;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 1px 3px rgba(0,0,0,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1c1e1e; --card:#2a2d2d; --ink:#ffffff; --body:#d6d8d8; --muted:#b9bcbc; --line:#3d4141; --soft:#333737;
+    --svc:#00343a; --hol:#3a2c1c; --hol-ink:#f8b18f;
+    --church:#ffffff; --church-ink:#000000; --group:#f68a62; --group-ink:#000000;
+    --hi:#fcd2c1; --hi-bg:#4d1c0a; --md:#ffe08a; --md-bg:#3d3000; --lo:#d6d8d8; --lo-bg:#333737;
+    --accent:#4fd0d1; --sel:#fff; --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1c1e1e; --card:#2a2d2d; --ink:#ffffff; --body:#d6d8d8; --muted:#b9bcbc; --line:#3d4141; --soft:#333737;
+  --svc:#00343a; --hol:#3a2c1c; --hol-ink:#f8b18f;
+  --church:#ffffff; --church-ink:#000000; --group:#f68a62; --group-ink:#000000;
+  --hi:#fcd2c1; --hi-bg:#4d1c0a; --md:#ffe08a; --md-bg:#3d3000; --lo:#d6d8d8; --lo-bg:#333737;
+  --accent:#4fd0d1; --sel:#fff; --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 Montserrat,'Helvetica Neue',system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+.hide{display:none!important}
+.wrap{max-width:1400px;margin:0 auto;padding:16px}
+header.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin-bottom:12px}
+.brand h1{margin:0;font:700 30px/1.05 'League Spartan',Montserrat,sans-serif;letter-spacing:-.015em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand h1 .yr{background:#000;color:#fff;border-radius:999px;padding:4px 14px 2px;font-size:24px}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;cursor:pointer;box-shadow:var(--shadow);font-weight:500}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.danger{color:var(--hi);border-color:var(--hi)}
+.btn.small{padding:4px 9px;font-size:12px;border-radius:8px;box-shadow:none}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--card)}
+.pill.edit{background:var(--hi-bg);color:var(--hi);border-color:transparent}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+
+.bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:12px}
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.chipf{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 10px;font-size:12.5px;font-weight:600;cursor:pointer}
+.chipf.off{opacity:.45;text-decoration:line-through}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--card);padding:6px 12px;cursor:pointer;font-weight:600;font-size:13px}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.mnav{display:flex;align-items:center;gap:6px}
+.mnav h2{margin:0;font:700 20px/1 'League Spartan',Montserrat,sans-serif;min-width:150px;text-align:center}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:1100px){.layout{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px}
+.panel h3{margin:0 0 8px;font-size:14px}
+.panel .sub{color:var(--muted);font-size:12px;margin:-4px 0 8px}
+
+/* Mes */
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.dow{padding:8px 6px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--line);text-align:center}
+.cell{min-height:118px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:5px;display:flex;flex-direction:column;gap:3px;cursor:pointer;position:relative;min-width:0}
+.cell:nth-child(7n+7){border-right:0}
+.cell.out{background:var(--soft);cursor:default}
+.cell.out > *{opacity:.35}
+.cell.svc{background:var(--svc)}
+.cell.holiday{background:var(--hol)}
+.cell.sel{outline:2px solid var(--sel);outline-offset:-2px}
+.cell .num{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700}
+.cell .num .tag{font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80%}
+.cell.holiday .num .tag{color:var(--hol-ink)}
+.cell.today .num > span:first-child{background:var(--accent);color:#fff;border-radius:999px;padding:0 6px}
+.ev{display:flex;align-items:center;gap:4px;border-radius:6px;padding:1px 6px;font-size:11.5px;line-height:1.45;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:0;text-align:left;cursor:pointer;width:100%}
+.ev .t{font-weight:500;opacity:.85}
+.ev.tent{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.28) 0 5px,transparent 5px 10px)}
+.ev.ch{background:var(--church);color:var(--church-ink)}
+.ev.gr{background:var(--group);color:var(--group-ink)}
+.ev .w{margin-left:auto}
+.more{font-size:11px;color:var(--muted);font-weight:600;padding-left:4px}
+@media (max-width:700px){
+  .cell{min-height:64px;padding:3px}
+  .cell .num .tag{display:none}
+  .ev{font-size:0;padding:0;height:6px;border-radius:3px}
+  .ev .w{display:none}
+  .more{font-size:10px}
+}
+
+/* Lista */
+.list .mon{margin:0 0 10px}
+.list .mon h3{margin:14px 0 6px;font:700 18px/1 'League Spartan',Montserrat,sans-serif}
+.row{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:6px;cursor:pointer}
+.row .d{min-width:62px;font-weight:700;font-size:12.5px}
+.row .d small{display:block;color:var(--muted);font-weight:500}
+.row .b{flex:1;min-width:0}
+.row .b .n{font-weight:600}
+.row .b .m{color:var(--muted);font-size:12px}
+.row .bar2{width:4px;align-self:stretch;border-radius:3px;flex:none}
+
+/* Avisos */
+.warns{display:flex;flex-direction:column;gap:6px}
+.wn{border-radius:10px;padding:7px 10px;font-size:12.5px;line-height:1.4}
+.wn b{font-weight:700}
+.wn.alto{background:var(--hi-bg);color:var(--hi)}
+.wn.medio{background:var(--md-bg);color:var(--md)}
+.wn.bajo,.wn.info{background:var(--lo-bg);color:var(--lo)}
+.wn .dates{display:block;font-size:11.5px;opacity:.9;margin-top:2px}
+.wn details summary{cursor:pointer;font-weight:600;font-size:11.5px;margin-top:2px}
+.cf{border-top:1px solid var(--line);padding:8px 0}
+.cf:first-child{border-top:0;padding-top:0}
+.cf .h{font-weight:600;font-size:13px;cursor:pointer;margin-bottom:5px}
+.cf .h .dot{margin-right:6px}
+.empty{color:var(--muted);font-size:12.5px}
+
+/* Diálogos */
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink);padding:0;width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 24px);box-shadow:0 10px 40px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog form,.dlg{padding:18px;display:flex;flex-direction:column;gap:10px}
+dialog h2{margin:0;font:700 22px/1.1 'League Spartan',Montserrat,sans-serif}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:600;color:var(--body)}
+.fld input[type=text],.fld input[type=password],.fld input[type=date],.fld input[type=time],.fld select,.fld textarea{border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:8px 10px;font-weight:500;color:var(--ink);width:100%}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500}
+.teams{display:flex;flex-wrap:wrap;gap:6px 14px}
+.err{color:var(--hi);font-size:12.5px;min-height:1em}
+.btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px}
+.btns .left{margin-right:auto}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;font-size:13px}
+.kv dt{color:var(--muted);font-weight:600}
+.kv dd{margin:0}
+.minpick{display:flex;flex-direction:column;gap:8px}
+.minpick label{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+.minpick input{accent-color:var(--accent)}
+.status{font-size:12px;color:var(--muted)}
+.status.bad{color:var(--hi)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:13px;box-shadow:var(--shadow);z-index:50;max-width:calc(100vw - 32px)}
+.preview{background:var(--md-bg);color:var(--md);border-radius:10px;padding:8px 12px;font-size:12.5px;margin-bottom:12px}
+footer{color:var(--muted);font-size:12px;margin-top:20px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Calendario de Ministerios <span class="yr" id="yrLabel">2027</span></h1>
+      <p>Eventos de cada ministerio junto a los eventos de la iglesia · Iglesia Northwood</p>
+    </div>
+    <div class="actions">
+      <span class="status" id="status"></span>
+      <span class="pill" id="modePill">Solo ver</span>
+      <button class="btn hide" id="switchMinBtn" type="button">Cambiar ministerio</button>
+      <button class="btn primary hide" id="addBtn" type="button">+ Evento</button>
+      <button class="btn" id="loginBtn" type="button">Entrar</button>
+    </div>
+  </header>
+
+  <div class="preview hide" id="previewNote">Vista previa local: los cambios no se guardan. Contraseña de prueba: <b>demo2027</b>.</div>
+
+  <div class="bar">
+    <div class="filters" id="filters"></div>
+    <div class="mnav" id="mnav">
+      <button class="btn small" id="prevM" type="button" aria-label="Mes anterior">‹</button>
+      <h2 id="mTitle">Enero</h2>
+      <button class="btn small" id="nextM" type="button" aria-label="Mes siguiente">›</button>
+    </div>
+    <div class="seg" role="tablist">
+      <button type="button" id="vMes" class="on">Mes</button>
+      <button type="button" id="vLista">Lista</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <main id="main"></main>
+    <aside>
+      <div class="panel" id="dayPanel"></div>
+      <div class="panel hide" id="conflictPanel">
+        <h3>Conflictos en 2027</h3>
+        <p class="sub">Solo los ves tú y los demás directores. Avisan, no bloquean.</p>
+        <div id="conflictList"></div>
+      </div>
+      <div class="panel">
+        <h3>Cómo leer el calendario</h3>
+        <div class="warns" style="font-size:12.5px">
+          <div><span class="ev ch" style="display:inline-flex;width:auto">Evento de la iglesia</span> &nbsp;viene del Calendario Northwood</div>
+          <div><span class="ev gr" style="display:inline-flex;width:auto">Evento de un grupo</span> &nbsp;de la iglesia (líderes, voluntarios…)</div>
+          <div><span class="dot" style="background:var(--svc);border:1px solid var(--line);border-radius:3px;width:14px;height:14px"></span> &nbsp;día de servicio (domingo y miércoles)</div>
+          <div><span class="dot" style="background:var(--hol);border:1px solid var(--line);border-radius:3px;width:14px;height:14px"></span> &nbsp;fin de semana festivo en EE. UU.</div>
+          <div><span class="ev tent" style="display:inline-flex;width:auto;background-color:#6e7272;color:#fff">Rayado</span> &nbsp;fecha tentativa</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <footer id="foot"></footer>
+</div>
+
+<!-- Entrar -->
+<dialog id="loginDlg">
+  <form id="loginForm" method="dialog">
+    <h2>Entrar como director</h2>
+    <p class="status" style="margin:0">Con la contraseña ves los conflictos y los nombres, y puedes editar los eventos de tu ministerio.</p>
+    <label class="fld">Contraseña <input type="password" id="lPass" autocomplete="current-password" required></label>
+    <div class="err" id="lErr"></div>
+    <div class="btns"><button class="btn" type="button" id="lCancel">Cancelar</button><button class="btn primary" type="submit">Entrar</button></div>
+  </form>
+</dialog>
+
+<!-- Configuración inicial (solo la primera vez) -->
+<dialog id="setupDlg">
+  <form id="setupForm" method="dialog">
+    <h2>Configurar edición</h2>
+    <div class="status" style="margin:0;line-height:1.5">
+      Esto se hace una sola vez. La página necesita un token de GitHub con permiso solo sobre este repo:
+      <ol style="margin:6px 0 0;padding-left:18px">
+        <li>GitHub → Settings → Developer settings → <b>Fine-grained tokens</b> → Generate new token.</li>
+        <li>Repository access: <b>Only select repositories</b> → <code>calendario-ministerios</code>.</li>
+        <li>Permissions → Repository → <b>Contents: Read and write</b>. Vence en 1 año.</li>
+      </ol>
+      Usa la <b>misma contraseña</b> que guardaste en el secreto <code>EDIT_PASSWORD</code> del repo; con ella se abre la lista de equipos.
+    </div>
+    <label class="fld">Token <input type="password" id="sTok" required></label>
+    <div class="two">
+      <label class="fld">Contraseña <input type="password" id="sPass" required minlength="6"></label>
+      <label class="fld">Repetir <input type="password" id="sPass2" required minlength="6"></label>
+    </div>
+    <div class="err" id="sErr"></div>
+    <div class="btns"><button class="btn" type="button" id="sCancel">Cancelar</button><button class="btn primary" type="submit">Guardar</button></div>
+  </form>
+</dialog>
+
+<!-- Elegir ministerio -->
+<dialog id="minDlg">
+  <form id="minForm" method="dialog">
+    <h2>¿Qué ministerio vas a editar?</h2>
+    <p class="status" style="margin:0">Solo podrás crear, cambiar o borrar eventos de ese ministerio. Los demás los ves, pero bloqueados.</p>
+    <div class="minpick" id="minPick"></div>
+    <div class="btns"><button class="btn" type="button" id="mCancel">Solo ver</button><button class="btn primary" type="submit">Continuar</button></div>
+  </form>
+</dialog>
+
+<!-- Evento -->
+<dialog id="evDlg">
+  <form id="evForm" method="dialog">
+    <h2 id="evTitle">Nuevo evento</h2>
+    <label class="fld">Nombre <input type="text" id="fName" required maxlength="80" placeholder="Ensayo general, Retiro, Salida…"></label>
+    <div class="two">
+      <label class="fld">Fecha <input type="date" id="fStart" min="2027-01-01" max="2027-12-31" required></label>
+      <label class="fld">Hasta (si dura varios días) <input type="date" id="fEnd" min="2027-01-01" max="2027-12-31"></label>
+    </div>
+    <label class="chk"><input type="checkbox" id="fAllDay"> Todo el día</label>
+    <div class="two" id="timeRow">
+      <label class="fld">Empieza <input type="time" id="fT1" value="19:00"></label>
+      <label class="fld">Termina <input type="time" id="fT2" value="20:30"></label>
+    </div>
+    <div class="two" id="repRow">
+      <label class="fld">Repetir
+        <select id="fRep">
+          <option value="">No se repite</option>
+          <option value="semanal">Cada semana</option>
+          <option value="quincenal">Cada 2 semanas</option>
+          <option value="mensual">Cada mes (mismo día de la semana)</option>
+        </select>
+      </label>
+      <label class="fld">Hasta <input type="date" id="fUntil" min="2027-01-01" max="2027-12-31"></label>
+    </div>
+    <div class="fld">Equipos que participan <div class="teams" id="fTeams"></div></div>
+    <label class="fld">Lugar <input type="text" id="fPlace" maxlength="80" placeholder="Santuario, salón de jóvenes…"></label>
+    <label class="fld">Notas <textarea id="fNotes" rows="2" maxlength="400"></textarea></label>
+    <label class="chk"><input type="checkbox" id="fTent"> Fecha tentativa</label>
+    <div class="warns" id="fWarns"></div>
+    <div class="btns">
+      <button class="btn danger left hide" type="button" id="fDel">Eliminar</button>
+      <button class="btn" type="button" id="fCancel">Cancelar</button>
+      <button class="btn primary" type="submit">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Eliminar un evento que se repite -->
+<dialog id="delDlg">
+  <div class="dlg">
+    <h2>Eliminar evento que se repite</h2>
+    <p class="status" style="margin:0" id="delInfo"></p>
+    <div class="minpick" id="delOpts"></div>
+    <div class="btns"><button class="btn" type="button" id="delCancel">Cancelar</button><button class="btn danger" type="button" id="delGo">Eliminar</button></div>
+  </div>
+</dialog>
+
+<!-- Detalle (solo lectura) -->
+<dialog id="viewDlg"><div class="dlg" id="viewBody"></div></dialog>
+
+<script>
+"use strict";
+/* ================= Configuración ================= */
+const CONFIG = { owner: "danielsc1012", repo: "calendario-ministerios", branch: "main",
+  configFile: "ministerios.json", rosterFile: "equipos.enc.json", editorFile: "editor.json", dataDir: "datos" };
+const PREVIEW = window.NW_PREVIEW || null;
+const ONLINE = !PREVIEW && /github\.io$/.test(location.hostname);
+const YEAR = 2027;
+const MONTHS = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const MSHORT = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const DOWS = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+const DOWL = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+
+/* ================= Estado ================= */
+let cfg = null, MIN = {};                 // config y ministerios por id
+let store = {};                           // id -> { data, sha, base }
+let church = [];                          // eventos del Calendario Northwood
+let rosterBlob = null, roster = null;     // lista de equipos (cifrada / descifrada)
+let token = null, editing = false, unlocked = false, myMin = null;
+let view = window.matchMedia("(max-width:700px)").matches ? "lista" : "mes";
+let month = new Date().getFullYear() === YEAR ? new Date().getMonth() : 0;
+let selDate = null, hidden = new Set();
+let OCC = new Map(), CH = new Map(), HOL = new Map();
+let editingEv = null, saveTimers = {}, saving = {};
+
+const $ = s => document.querySelector(s);
+const ss = { get(k){ try{return sessionStorage.getItem(k)}catch(e){return null} }, set(k,v){ try{sessionStorage.setItem(k,v)}catch(e){} }, del(k){ try{sessionStorage.removeItem(k)}catch(e){} } };
+const ls = { get(k){ try{return localStorage.getItem(k)}catch(e){return null} }, set(k,v){ try{localStorage.setItem(k,v)}catch(e){} } };
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ================= Fechas ================= */
+const pad = n => String(n).padStart(2,"0");
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const hm = t => { if (!t) return null; const [h,m] = t.split(":").map(Number); return h*60+m; };
+const fmtT = t => { if (!t) return ""; let [h,m] = t.split(":").map(Number); const ap = h >= 12 ? "pm" : "am"; h = h % 12 || 12; return `${h}:${pad(m)} ${ap}`; };
+const fmtD = s => { const d = parse(s); return `${d.getDate()} ${MSHORT[d.getMonth()]}`; };
+const fmtDL = s => { const d = parse(s); return `${DOWL[d.getDay()]} ${d.getDate()} de ${MONTHS[d.getMonth()].toLowerCase()}`; };
+const todayIso = iso(new Date());
+
+/* Fines de semana festivos de EE. UU. */
+function nthDow(y, m, dow, n){ const d = new Date(y, m, 1); const off = (dow - d.getDay() + 7) % 7; return new Date(y, m, 1 + off + (n-1)*7); }
+function lastDow(y, m, dow){ const d = new Date(y, m+1, 0); return addDays(d, -((d.getDay() - dow + 7) % 7)); }
+function holidays(y){
+  const H = [
+    ["Año Nuevo", new Date(y,0,1)], ["Martin Luther King Jr. Day", nthDow(y,0,1,3)], ["Presidents' Day", nthDow(y,1,1,3)],
+    ["Memorial Day", lastDow(y,4,1)], ["Juneteenth", new Date(y,5,19)], ["Independence Day", new Date(y,6,4)],
+    ["Labor Day", nthDow(y,8,1,1)], ["Thanksgiving", nthDow(y,10,4,4)], ["Navidad", new Date(y,11,25)]
+  ];
+  const map = new Map();
+  for (const [name, d] of H){
+    const dow = d.getDay(); let from = d, to = d;
+    if (dow === 1){ from = addDays(d,-2); }
+    else if (dow === 5){ to = addDays(d,2); }
+    else if (dow === 4 && name === "Thanksgiving"){ to = addDays(d,3); }
+    else if (dow === 6){ to = addDays(d,1); }
+    else if (dow === 0){ from = addDays(d,-1); }
+    for (let x = new Date(from); x <= to; x = addDays(x,1)) map.set(iso(x), name);
+  }
+  return map;
+}
+
+/* ================= Ocurrencias ================= */
+function occurrences(ev){
+  const out = [], start = parse(ev.inicio), end = ev.fin ? parse(ev.fin) : start;
+  const multi = end > start;
+  const allDay = multi || ev.todoElDia || !ev.horaInicio;
+  let s = allDay ? 0 : hm(ev.horaInicio), e = allDay ? 1440 : (hm(ev.horaFin) ?? s + 60);
+  if (e <= s) e = Math.min(1440, s + 60);
+  const skip = new Set(ev.excepto || []);
+  const push = d => { const k = iso(d); if (d.getFullYear() === YEAR && !skip.has(k)) out.push({ date: k, s, e, allDay }); };
+  if (multi){ for (let d = new Date(start); d <= end; d = addDays(d,1)) push(d); return out; }
+  const tipo = ev.repetir && ev.repetir.tipo;
+  if (!tipo){ push(start); return out; }
+  const until = ev.repetir.hasta ? parse(ev.repetir.hasta) : new Date(YEAR, 11, 31);
+  if (tipo === "semanal" || tipo === "quincenal"){
+    const step = tipo === "semanal" ? 7 : 14;
+    for (let d = new Date(start); d <= until; d = addDays(d, step)) push(d);
+  } else if (tipo === "mensual"){
+    const dow = start.getDay(), n = Math.ceil(start.getDate() / 7);
+    for (let m = start.getMonth(), y = start.getFullYear(); ; m++){
+      const yy = y + Math.floor(m / 12), mm = m % 12;
+      let d = n >= 5 ? lastDow(yy, mm, dow) : nthDow(yy, mm, dow, n);
+      if (d.getMonth() !== mm) d = lastDow(yy, mm, dow);
+      if (d > until) break;
+      if (d >= start) push(d);
+    }
+  }
+  return out;
+}
+function repLabel(ev){
+  const r = ev.repetir && ev.repetir.tipo; if (!r) return "";
+  const d = parse(ev.inicio), dl = DOWL[d.getDay()];
+  if (r === "semanal") return `cada ${dl}`;
+  if (r === "quincenal") return `cada 2 semanas (${dl})`;
+  const n = Math.ceil(d.getDate()/7); return `cada mes, ${n >= 5 ? "último" : ["primer","segundo","tercer","cuarto"][n-1]} ${dl}`;
+}
+function timeLabel(ev){
+  const multi = ev.fin && ev.fin > ev.inicio;
+  if (multi) return `${fmtD(ev.inicio)} – ${fmtD(ev.fin)}`;
+  if (ev.todoElDia || !ev.horaInicio) return "Todo el día";
+  return `${fmtT(ev.horaInicio)} – ${fmtT(ev.horaFin)}`;
+}
+function churchRange(c){ const out = [], a = parse(c.inicio), b = parse(c.fin || c.inicio); for (let d = new Date(a); d <= b; d = addDays(d,1)) out.push(iso(d)); return out; }
+
+function rebuild(){
+  OCC = new Map(); CH = new Map();
+  for (const id in store) for (const ev of store[id].data.eventos){
+    for (const o of occurrences(ev)){ if (!OCC.has(o.date)) OCC.set(o.date, []); OCC.get(o.date).push({ ...o, ev, min: id }); }
+  }
+  for (const v of OCC.values()) v.sort((a,b) => a.s - b.s);
+  for (const c of church) for (const d of churchRange(c)){ if (!CH.has(d)) CH.set(d, []); CH.get(d).push(c); }
+}
+
+/* ================= Personas y conflictos ================= */
+function peopleOf(min, equipos){
+  if (!roster) return [];
+  const tags = new Set((equipos && equipos.length ? equipos : MIN[min].equipos.map(e => e.id)).map(t => `${min}:${t}`));
+  return roster.filter(p => p.t.some(t => tags.has(t)));
+}
+const LEVEL = { alto: 3, medio: 2, bajo: 1, info: 0 };
+// Revisa un evento (borrador o guardado) contra todo lo demás. onlyAfter: para el panel global, cada par de eventos se cuenta una vez.
+function check(ev, min, opts = {}){
+  const W = new Map();
+  const add = (key, nivel, texto, date, nombres) => {
+    if (!W.has(key)) W.set(key, { nivel, texto, dates: [], nombres });
+    W.get(key).dates.push(date);
+  };
+  const mine = peopleOf(min, ev.equipos);
+  const mineIds = new Set(mine.map(p => p.n));
+  const selfKey = `${min}/${ev.id}`;
+  for (const o of occurrences(ev)){
+    const d = parse(o.date), dow = d.getDay();
+    for (const c of (CH.get(o.date) || [])){
+      if (c.publico === "iglesia") add(`ch:${c.id}`, "alto", `Evento de toda la iglesia: <b>${esc(c.nombre)}</b>`, o.date);
+      else add(`ch:${c.id}`, "medio", `Evento de la iglesia${c.grupo ? ` (${esc(c.grupo)})` : ""}: <b>${esc(c.nombre)}</b>`, o.date);
+    }
+    for (const sv of (cfg.servicios || [])){
+      if (sv.dia === dow && o.s < hm(sv.fin) && hm(sv.inicio) < o.e)
+        add(`sv:${sv.nombre}`, "medio", `Se cruza con el <b>${esc(sv.nombre)}</b> (${fmtT(sv.inicio)} – ${fmtT(sv.fin)})`, o.date);
+    }
+    if (HOL.has(o.date)) add(`hol:${HOL.get(o.date)}`, "bajo", `Fin de semana festivo: <b>${esc(HOL.get(o.date))}</b>`, o.date);
+    for (const x of (OCC.get(o.date) || [])){
+      const xKey = `${x.min}/${x.ev.id}`;
+      if (xKey === selfKey) continue;
+      if (opts.onlyAfter && xKey < selfKey) continue;
+      if (!(o.s < x.e && x.s < o.e)) continue;
+      const label = `${esc(MIN[x.min].nombre)} · <b>${esc(x.ev.nombre)}</b>`;
+      if (!roster){ add(`ev:${xKey}`, "info", `A la misma hora: ${label}`, o.date); continue; }
+      const shared = peopleOf(x.min, x.ev.equipos).filter(p => mineIds.has(p.n)).map(p => p.n);
+      if (shared.length) add(`ev:${xKey}`, "alto", `${shared.length} ${shared.length === 1 ? "persona sirve" : "personas sirven"} también en ${label}`, o.date, shared);
+      else if (x.min !== min) add(`ev:${xKey}`, "info", `A la misma hora: ${label} (no comparten personas)`, o.date);
+    }
+  }
+  return [...W.values()].sort((a,b) => LEVEL[b.nivel] - LEVEL[a.nivel]);
+}
+function warnHTML(list, { hideInfo } = {}){
+  const L = hideInfo ? list.filter(w => w.nivel !== "info") : list;
+  if (!L.length) return "";
+  return L.map(w => {
+    const ds = w.dates, n = ds.length;
+    const dtxt = n === 1 ? fmtDL(ds[0]) : `${n} fechas: ${ds.slice(0,6).map(fmtD).join(", ")}${n > 6 ? "…" : ""}`;
+    const names = w.nombres && w.nombres.length ? `<details><summary>Ver nombres</summary>${w.nombres.map(esc).join(", ")}</details>` : "";
+    const icon = { alto: "⚠️", medio: "⚠️", bajo: "📅", info: "ℹ️" }[w.nivel];
+    return `<div class="wn ${w.nivel}">${icon} ${w.texto}<span class="dates">${dtxt}</span>${names}</div>`;
+  }).join("");
+}
+const evWarnCache = new Map();
+function evLevel(ev, min){
+  if (!unlocked) return 0;
+  const k = `${min}/${ev.id}`;
+  if (!evWarnCache.has(k)) evWarnCache.set(k, Math.max(0, ...check(ev, min).map(w => LEVEL[w.nivel])));
+  return evWarnCache.get(k);
+}
+
+/* ================= Render ================= */
+function render(){
+  rebuild(); evWarnCache.clear();
+  $("#modePill").textContent = editing ? `Editando · ${MIN[myMin]?.nombre || ""}` : unlocked ? "Director (solo ver)" : "Solo ver";
+  $("#modePill").classList.toggle("edit", editing);
+  $("#loginBtn").textContent = unlocked ? "Salir" : "Entrar";
+  $("#addBtn").classList.toggle("hide", !editing);
+  $("#switchMinBtn").classList.toggle("hide", !unlocked);
+  $("#switchMinBtn").textContent = editing ? "Cambiar ministerio" : "Editar un ministerio";
+  $("#conflictPanel").classList.toggle("hide", !unlocked);
+  $("#vMes").classList.toggle("on", view === "mes"); $("#vLista").classList.toggle("on", view === "lista");
+  $("#mTitle").textContent = MONTHS[month];
+  $("#mnav").style.visibility = view === "mes" ? "visible" : "hidden";
+  renderFilters();
+  view === "mes" ? renderMonth() : renderList();
+  renderDay();
+  if (unlocked) renderConflicts();
+  const r = rosterBlob && rosterBlob.actualizado ? ` · Equipos de Planning Center al ${fmtD(rosterBlob.actualizado)}` : "";
+  $("#foot").textContent = `Eventos de la iglesia desde el Calendario Northwood${r}`;
+}
+function renderFilters(){
+  const items = [{ id: "_church", nombre: "Iglesia", color: "var(--church)" }, ...cfg.ministerios];
+  $("#filters").innerHTML = items.map(m => `<button type="button" class="chipf ${hidden.has(m.id) ? "off" : ""}" data-f="${m.id}"><span class="dot" style="background:${m.color}"></span>${esc(m.nombre)}</button>`).join("");
+  $("#filters").querySelectorAll("[data-f]").forEach(b => b.onclick = () => { const f = b.dataset.f; hidden.has(f) ? hidden.delete(f) : hidden.add(f); render(); });
+}
+function chipMin(x){
+  const m = MIN[x.min], lvl = evLevel(x.ev, x.min);
+  const t = x.allDay ? "" : `<span class="t">${fmtT(x.ev.horaInicio).replace(":00","").replace(" ","")}</span> `;
+  return `<button type="button" class="ev ${x.ev.tentativo ? "tent" : ""}" style="background:${m.color};color:${m.tinta}" data-ev="${x.min}/${esc(x.ev.id)}" data-date="${x.date}" title="${esc(m.nombre)} · ${esc(x.ev.nombre)}">${t}${esc(x.ev.nombre)}${lvl >= 2 ? '<span class="w">⚠️</span>' : ""}</button>`;
+}
+function chipCh(c){
+  return `<button type="button" class="ev ${c.publico === "iglesia" ? "ch" : "gr"} ${c.tentativo ? "tent" : ""}" data-ch="${esc(c.id)}" title="${esc(c.nombre)}">${esc(c.nombre)}</button>`;
+}
+function dayItems(k){
+  const ch = hidden.has("_church") ? [] : (CH.get(k) || []);
+  const mi = (OCC.get(k) || []).filter(x => !hidden.has(x.min));
+  return { ch, mi };
+}
+function renderMonth(){
+  const first = new Date(YEAR, month, 1), start = addDays(first, -first.getDay());
+  let h = DOWS.map(d => `<div class="dow">${d}</div>`).join("");
+  for (let i = 0; i < 42; i++){
+    const d = addDays(start, i), k = iso(d), out = d.getMonth() !== month;
+    if (i >= 35 && out && d.getDay() === 0) break;
+    const svc = (cfg.servicios || []).some(s => s.dia === d.getDay());
+    const hol = HOL.get(k);
+    const cls = ["cell", out && "out", !out && svc && "svc", !out && hol && "holiday", k === todayIso && "today", k === selDate && "sel"].filter(Boolean).join(" ");
+    let inner = "";
+    if (!out){
+      const { ch, mi } = dayItems(k), all = [...ch.map(chipCh), ...mi.map(chipMin)];
+      inner = all.slice(0,4).join("") + (all.length > 4 ? `<span class="more">+${all.length - 4} más</span>` : "");
+    }
+    h += `<div class="${cls}" data-day="${out ? "" : k}"><div class="num"><span>${d.getDate()}</span>${hol && !out ? `<span class="tag">${esc(hol)}</span>` : ""}</div>${inner}</div>`;
+  }
+  $("#main").innerHTML = `<div class="grid">${h}</div>`;
+  $("#main").querySelectorAll("[data-day]").forEach(c => c.onclick = e => {
+    if (!c.dataset.day) return;
+    if (e.target.closest("[data-ev],[data-ch]")) return;
+    selDate = c.dataset.day; render();
+    if (editing) openForm(null, selDate);
+  });
+  bindChips($("#main"));
+}
+function bindChips(root){
+  root.querySelectorAll("[data-ev]").forEach(b => b.onclick = e => { e.stopPropagation(); const [min, id] = b.dataset.ev.split(/\/(.+)/); openEvent(min, id, b.dataset.date); });
+  root.querySelectorAll("[data-ch]").forEach(b => b.onclick = e => { e.stopPropagation(); openChurch(b.dataset.ch); });
+}
+function renderList(){
+  let h = "";
+  for (let m = 0; m < 12; m++){
+    const rows = [];
+    const recShown = new Set();
+    const lastDay = new Date(YEAR, m+1, 0).getDate();
+    for (let day = 1; day <= lastDay; day++){
+      const k = iso(new Date(YEAR, m, day)), { ch, mi } = dayItems(k);
+      for (const c of ch) if (c.inicio === k || day === 1) rows.push({ k, html: listRow(k, c.publico === "iglesia" ? "var(--church)" : "var(--group)", esc(c.nombre), c.fin && c.fin !== c.inicio ? `${fmtD(c.inicio)} – ${fmtD(c.fin)} · Calendario de la iglesia` : "Calendario de la iglesia", `data-ch="${esc(c.id)}"`) });
+      for (const x of mi){
+        const key = `${x.min}/${x.ev.id}`;
+        if (x.ev.repetir && x.ev.repetir.tipo){
+          if (recShown.has(key)) continue; recShown.add(key);
+          rows.push({ k, html: listRow(k, MIN[x.min].color, `${esc(x.ev.nombre)} <span style="font-weight:500;color:var(--muted)">· ${repLabel(x.ev)}</span>`, `${esc(MIN[x.min].nombre)} · ${timeLabel(x.ev)}${x.ev.lugar ? " · " + esc(x.ev.lugar) : ""}`, `data-ev="${key}" data-date="${k}"`, x.ev, x.min, true) });
+          continue;
+        }
+        if (x.ev.fin && x.ev.fin > x.ev.inicio && x.date !== x.ev.inicio && day !== 1) continue;
+        rows.push({ k, html: listRow(k, MIN[x.min].color, esc(x.ev.nombre), `${esc(MIN[x.min].nombre)} · ${timeLabel(x.ev)}${x.ev.lugar ? " · " + esc(x.ev.lugar) : ""}`, `data-ev="${key}" data-date="${k}"`, x.ev, x.min) });
+      }
+    }
+    h += `<div class="mon"><h3>${MONTHS[m]}</h3>${rows.length ? rows.map(r => r.html).join("") : '<div class="empty">Sin eventos.</div>'}</div>`;
+  }
+  $("#main").innerHTML = `<div class="list">${h}</div>`;
+  bindChips($("#main"));
+}
+function listRow(k, color, name, meta, attrs, ev, min, rec){
+  const d = parse(k), lvl = ev ? evLevel(ev, min) : 0;
+  const dcol = rec ? `<div class="d">Desde<small>${fmtD(ev.inicio)}</small></div>` : `<div class="d">${d.getDate()} ${MSHORT[d.getMonth()]}<small>${DOWS[d.getDay()]}</small></div>`;
+  return `<div class="row" ${attrs}><span class="bar2" style="background:${color}"></span>${dcol}<div class="b"><div class="n">${name}${lvl >= 2 ? " ⚠️" : ""}${ev && ev.tentativo ? ' <span class="pill" style="padding:1px 7px;font-size:10.5px">tentativo</span>' : ""}</div><div class="m">${meta}</div></div></div>`;
+}
+function renderDay(){
+  const p = $("#dayPanel");
+  if (!selDate){
+    p.innerHTML = `<h3>${editing ? "Agregar un evento" : "Un día del calendario"}</h3><p class="empty">${editing ? `Haz clic en un día para agregar un evento de <b>${esc(MIN[myMin].nombre)}</b>, o usa “+ Evento”.` : "Haz clic en un día para ver todo lo que pasa ese día."}${!unlocked ? " Los directores entran con la contraseña para ver conflictos y editar." : ""}</p>`;
+    return;
+  }
+  const { ch, mi } = dayItems(selDate), hol = HOL.get(selDate);
+  const svc = (cfg.servicios || []).filter(s => s.dia === parse(selDate).getDay());
+  let h = `<h3 style="text-transform:capitalize">${fmtDL(selDate)}</h3>`;
+  if (hol) h += `<p class="sub">Fin de semana festivo: ${esc(hol)}</p>`;
+  h += `<div class="warns">`;
+  svc.forEach(s => h += `<div class="wn info">⛪ ${esc(s.nombre)} · ${fmtT(s.inicio)} – ${fmtT(s.fin)}</div>`);
+  h += ch.map(chipCh).join("") + mi.map(x => chipMin(x)).join("");
+  if (!svc.length && !ch.length && !mi.length) h += `<p class="empty">Nada programado.</p>`;
+  h += `</div>`;
+  if (editing) h += `<div class="btns"><button class="btn primary small" type="button" id="dayAdd">+ Evento de ${esc(MIN[myMin].nombre)} este día</button></div>`;
+  p.innerHTML = h;
+  bindChips(p);
+  if (editing) $("#dayAdd").onclick = () => openForm(null, selDate);
+}
+function renderConflicts(){
+  const blocks = [];
+  for (const id in store) for (const ev of store[id].data.eventos){
+    const w = check(ev, id, { onlyAfter: true }).filter(x => x.nivel === "alto" || x.nivel === "medio");
+    if (w.length) blocks.push({ id, ev, w });
+  }
+  blocks.sort((a,b) => a.ev.inicio.localeCompare(b.ev.inicio));
+  $("#conflictList").innerHTML = blocks.length ? blocks.map(b => `<div class="cf"><div class="h" data-ev="${b.id}/${esc(b.ev.id)}" data-date="${b.ev.inicio}"><span class="dot" style="background:${MIN[b.id].color}"></span>${esc(b.ev.nombre)} <span style="color:var(--muted);font-weight:500">· ${esc(MIN[b.id].nombre)}</span></div><div class="warns">${warnHTML(b.w)}</div></div>`).join("") : `<p class="empty">No hay conflictos. 🙌</p>`;
+  bindChips($("#conflictList"));
+}
+
+/* ================= Ver / editar eventos ================= */
+function findEv(min, id){ return store[min] && store[min].data.eventos.find(e => e.id === id); }
+function openEvent(min, id, date){
+  const ev = findEv(min, id); if (!ev) return;
+  if (editing && min === myMin) return openForm(ev, null, date);
+  const m = MIN[min], ppl = unlocked ? peopleOf(min, ev.equipos) : [];
+  let h = `<h2><span class="dot" style="background:${m.color};width:14px;height:14px"></span> ${esc(ev.nombre)}</h2>
+    <dl class="kv"><dt>Ministerio</dt><dd>${esc(m.nombre)}</dd>
+    <dt>Fecha</dt><dd style="text-transform:capitalize">${ev.repetir && ev.repetir.tipo ? `${esc(repLabel(ev))}, desde el ${fmtD(ev.inicio)}${ev.repetir.hasta ? ` hasta el ${fmtD(ev.repetir.hasta)}` : ""}` : fmtDL(ev.inicio)}</dd>
+    <dt>Hora</dt><dd>${timeLabel(ev)}</dd>
+    ${ev.lugar ? `<dt>Lugar</dt><dd>${esc(ev.lugar)}</dd>` : ""}
+    <dt>Equipos</dt><dd>${esc((ev.equipos && ev.equipos.length ? ev.equipos : m.equipos.map(e => e.id)).join(", "))}</dd>
+    ${unlocked ? `<dt>Personas</dt><dd>${ppl.length} <details style="display:inline"><summary style="display:inline;cursor:pointer;color:var(--accent);font-weight:600">ver</summary> ${ppl.map(p => esc(p.n)).join(", ")}</details></dd>` : ""}
+    ${ev.notas ? `<dt>Notas</dt><dd>${esc(ev.notas)}</dd>` : ""}
+    ${ev.tentativo ? `<dt>Estado</dt><dd>Fecha tentativa</dd>` : ""}</dl>`;
+  if (unlocked){ const w = warnHTML(check(ev, min)); h += w ? `<h3 style="margin:6px 0 0;font-size:14px">Conflictos</h3><div class="warns">${w}</div>` : `<p class="empty">Sin conflictos.</p>`; }
+  if (editing && min !== myMin) h += `<p class="status" style="margin:0">Este evento es de ${esc(m.nombre)}; solo su director lo puede cambiar.</p>`;
+  h += `<div class="btns"><button class="btn primary" type="button" id="vClose">Cerrar</button></div>`;
+  $("#viewBody").innerHTML = h; $("#viewDlg").showModal(); $("#vClose").onclick = () => $("#viewDlg").close();
+}
+function openChurch(id){
+  const c = church.find(x => x.id === id); if (!c) return;
+  $("#viewBody").innerHTML = `<h2>${esc(c.nombre)}</h2><dl class="kv"><dt>Fecha</dt><dd style="text-transform:capitalize">${c.fin && c.fin !== c.inicio ? `${fmtD(c.inicio)} – ${fmtD(c.fin)}` : fmtDL(c.inicio)}</dd>
+    <dt>Para</dt><dd>${c.publico === "iglesia" ? "Toda la iglesia" : esc(c.grupo || "Un grupo")}</dd>${c.tentativo ? "<dt>Estado</dt><dd>Fecha tentativa</dd>" : ""}</dl>
+    <p class="status" style="margin:0">Viene del Calendario Northwood; se cambia allá.</p><div class="btns"><button class="btn primary" type="button" id="vClose">Cerrar</button></div>`;
+  $("#viewDlg").showModal(); $("#vClose").onclick = () => $("#viewDlg").close();
+}
+
+let formDate = null;
+function openForm(ev, date, occDate){
+  editingEv = ev; formDate = occDate || null;
+  const m = MIN[myMin];
+  $("#evTitle").textContent = ev ? "Editar evento" : `Nuevo evento · ${m.nombre}`;
+  $("#fName").value = ev ? ev.nombre : "";
+  $("#fStart").value = ev ? ev.inicio : (date || `${YEAR}-${pad(month+1)}-01`);
+  $("#fEnd").value = ev && ev.fin && ev.fin !== ev.inicio ? ev.fin : "";
+  $("#fAllDay").checked = ev ? !!ev.todoElDia : false;
+  $("#fT1").value = ev && ev.horaInicio ? ev.horaInicio : "19:00";
+  $("#fT2").value = ev && ev.horaFin ? ev.horaFin : "20:30";
+  $("#fRep").value = ev && ev.repetir ? ev.repetir.tipo || "" : "";
+  $("#fUntil").value = ev && ev.repetir && ev.repetir.hasta ? ev.repetir.hasta : "";
+  const sel = new Set(ev && ev.equipos && ev.equipos.length ? ev.equipos : m.equipos.map(e => e.id));
+  $("#fTeams").innerHTML = m.equipos.map(t => `<label class="chk"><input type="checkbox" value="${esc(t.id)}" ${sel.has(t.id) ? "checked" : ""}> ${esc(t.id)}</label>`).join("");
+  $("#fPlace").value = ev ? ev.lugar || "" : "";
+  $("#fNotes").value = ev ? ev.notas || "" : "";
+  $("#fTent").checked = ev ? !!ev.tentativo : false;
+  $("#fDel").classList.toggle("hide", !ev);
+  $("#fDel").textContent = "Eliminar"; $("#fDel").dataset.armed = "";
+  syncForm(); $("#evDlg").showModal();
+}
+function readForm(){
+  const multi = $("#fEnd").value && $("#fEnd").value > $("#fStart").value;
+  const allDay = $("#fAllDay").checked || multi;
+  const rep = multi ? "" : $("#fRep").value;
+  return {
+    id: editingEv ? editingEv.id : `${myMin.slice(0,1)}-${Date.now().toString(36)}`,
+    nombre: $("#fName").value.trim(), inicio: $("#fStart").value, fin: multi ? $("#fEnd").value : $("#fStart").value,
+    todoElDia: allDay, horaInicio: allDay ? "" : $("#fT1").value, horaFin: allDay ? "" : $("#fT2").value,
+    repetir: rep ? { tipo: rep, hasta: $("#fUntil").value || `${YEAR}-12-31` } : null,
+    excepto: editingEv ? (editingEv.excepto || []) : [],
+    equipos: [...$("#fTeams").querySelectorAll("input:checked")].map(i => i.value),
+    lugar: $("#fPlace").value.trim(), notas: $("#fNotes").value.trim(), tentativo: $("#fTent").checked
+  };
+}
+function syncForm(){
+  const multi = $("#fEnd").value && $("#fEnd").value > $("#fStart").value;
+  $("#timeRow").classList.toggle("hide", $("#fAllDay").checked || multi);
+  $("#repRow").classList.toggle("hide", !!multi);
+  $("#fUntil").parentElement.classList.toggle("hide", !$("#fRep").value);
+  if (!$("#fStart").value){ $("#fWarns").innerHTML = ""; return; }
+  const draft = readForm();
+  const w = check(draft, myMin);
+  $("#fWarns").innerHTML = w.length ? warnHTML(w) : `<div class="wn info">✅ Sin conflictos con la iglesia ni con otros ministerios.</div>`;
+}
+["#fStart","#fEnd","#fAllDay","#fT1","#fT2","#fRep","#fUntil"].forEach(s => $(s).addEventListener("input", syncForm));
+$("#fTeams").addEventListener("change", syncForm);
+$("#fCancel").onclick = () => $("#evDlg").close();
+function removeEv(ev){
+  const list = store[myMin].data.eventos, i = list.findIndex(e => e.id === ev.id);
+  if (i >= 0) list.splice(i, 1);
+}
+$("#fDel").onclick = () => {
+  const ev = editingEv;
+  if (ev.repetir && ev.repetir.tipo) return askDeleteRecurring(ev);
+  const b = $("#fDel");
+  if (!b.dataset.armed){ b.dataset.armed = "1"; b.textContent = "¿Seguro? Eliminar"; return; }
+  removeEv(ev); $("#evDlg").close(); afterChange(myMin); toast("Evento eliminado.");
+};
+// Evento que se repite: solo esta fecha, de esta fecha en adelante, o toda la serie
+function askDeleteRecurring(ev){
+  const occ = occurrences(ev).map(o => o.date);
+  if (!occ.length){ removeEv(ev); $("#evDlg").close(); afterChange(myMin); return; }
+  const d = formDate && occ.includes(formDate) ? formDate : occ[0];
+  const isFirst = d === occ[0];
+  const opts = [
+    ["solo", `Solo el ${fmtDL(d)}`, "Las demás fechas siguen igual."],
+    ...(isFirst ? [] : [["desde", `Del ${fmtD(d)} en adelante`, `Se mantienen las fechas anteriores (desde el ${fmtD(occ[0])}).`]]),
+    ["todo", "Toda la serie", `Las ${occ.length} fechas, desde el ${fmtD(occ[0])}.`]
+  ];
+  $("#delInfo").innerHTML = `“<b>${esc(ev.nombre)}</b>” se repite ${esc(repLabel(ev))}. ¿Qué quieres eliminar?`;
+  $("#delOpts").innerHTML = opts.map(([v, t, s], i) => `<label><input type="radio" name="delopt" value="${v}" ${i === 0 ? "checked" : ""}><span>${t}<br><span style="color:var(--muted);font-weight:500;font-size:12px">${s}</span></span></label>`).join("");
+  $("#delGo").onclick = () => {
+    const v = $("#delOpts").querySelector("input:checked").value;
+    if (v === "solo"){
+      ev.excepto = [...new Set([...(ev.excepto || []), d])];
+      if (!occurrences(ev).length) removeEv(ev);
+      toast(`Se quitó el ${fmtD(d)} de “${ev.nombre}”.`);
+    } else if (v === "desde"){
+      ev.repetir.hasta = iso(addDays(parse(d), -1));
+      ev.excepto = (ev.excepto || []).filter(x => x < d);
+      if (!occurrences(ev).length) removeEv(ev);
+      toast(`“${ev.nombre}” ahora termina antes del ${fmtD(d)}.`);
+    } else {
+      removeEv(ev); toast("Se eliminó toda la serie.");
+    }
+    $("#delDlg").close(); $("#evDlg").close(); afterChange(myMin);
+  };
+  $("#delDlg").showModal();
+}
+$("#delCancel").onclick = () => $("#delDlg").close();
+$("#evForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const d = readForm();
+  if (!d.nombre) return;
+  if (!d.equipos.length){ $("#fWarns").innerHTML = `<div class="wn alto">Elige al menos un equipo.</div>`; return; }
+  if (!d.todoElDia && hm(d.horaFin) <= hm(d.horaInicio)){ $("#fWarns").innerHTML = `<div class="wn alto">La hora de fin debe ser después de la de inicio.</div>`; return; }
+  const list = store[myMin].data.eventos, i = list.findIndex(x => x.id === d.id);
+  if (i >= 0) list[i] = d; else list.push(d);
+  list.sort((a,b) => a.inicio.localeCompare(b.inicio));
+  $("#evDlg").close(); selDate = d.inicio; month = parse(d.inicio).getMonth(); afterChange(myMin);
+  const n = check(d, myMin).filter(w => w.nivel === "alto").length;
+  toast(n ? `Guardado con ${n} aviso${n > 1 ? "s" : ""} de conflicto. Revísalo en el panel.` : "Evento guardado.");
+});
+$("#addBtn").onclick = () => openForm(null, selDate);
+
+/* ================= GitHub ================= */
+const api = (p, owner = CONFIG.owner, repo = CONFIG.repo) => `https://api.github.com/repos/${owner}/${repo}/contents/${p}`;
+const b64enc = s => { const bytes = new TextEncoder().encode(s); let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); };
+const b64dec = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g,"")), c => c.charCodeAt(0)));
+async function ghGet(path, auth, owner, repo){
+  const h = { "Accept": "application/vnd.github+json" }; if (auth && token) h.Authorization = `Bearer ${token}`;
+  const r = await fetch(`${api(path, owner, repo)}?ref=${CONFIG.branch}&t=${Date.now()}`, { headers: h, cache: "no-store" });
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error(`GitHub ${r.status}`);
+  const j = await r.json(); return { sha: j.sha, text: b64dec(j.content) };
+}
+async function ghPut(path, text, prevSha, msg, tok){
+  const r = await fetch(api(path), { method: "PUT", headers: { "Accept":"application/vnd.github+json", "Authorization": `Bearer ${tok || token}`, "Content-Type":"application/json" },
+    body: JSON.stringify({ message: msg, content: b64enc(text), branch: CONFIG.branch, ...(prevSha ? { sha: prevSha } : {}) }) });
+  if (!r.ok){ const err = new Error(`GitHub ${r.status}`); err.status = r.status; throw err; }
+  return (await r.json()).content.sha;
+}
+// Lee un archivo del repo: API de GitHub (más fresco) y, si falla, la copia publicada en Pages.
+async function readFile(path, auth){
+  try{ const f = await ghGet(path, auth); if (f) return f; }catch(e){}
+  try{ const r = await fetch(`${path}?t=${Date.now()}`, { cache: "no-store" }); if (r.ok) return { sha: null, text: await r.text() }; }catch(e){}
+  return null;
+}
+
+async function load(){
+  setStatus("Cargando…");
+  try{
+    if (PREVIEW){
+      cfg = PREVIEW.config; church = PREVIEW.iglesia.eventos || []; rosterBlob = PREVIEW.equipos;
+      store = {}; for (const m of cfg.ministerios) store[m.id] = { data: JSON.parse(JSON.stringify(PREVIEW.datos[m.id] || { eventos: [] })), sha: null, base: null };
+    } else {
+      const auth = !!token;
+      const c = await readFile(CONFIG.configFile, auth); cfg = JSON.parse(c.text);
+      store = {};
+      await Promise.all(cfg.ministerios.map(async m => {
+        const f = await readFile(`${CONFIG.dataDir}/${m.id}.json`, auth);
+        const data = f ? JSON.parse(f.text) : { ministerio: m.id, eventos: [] };
+        if (!Array.isArray(data.eventos)) data.eventos = [];
+        store[m.id] = { data, sha: f && f.sha, base: f ? f.text : null };
+      }));
+      const ig = cfg.iglesia || {};
+      try{ const f = await ghGet(ig.archivo, false, ig.owner, ig.repo); church = JSON.parse(f.text).eventos || []; }
+      catch(e){ try{ church = (await (await fetch(`${ig.pages}?t=${Date.now()}`, { cache: "no-store" })).json()).eventos || []; }catch(e2){ church = []; toast("No se pudieron cargar los eventos de la iglesia."); } }
+      try{ const r = await readFile(CONFIG.rosterFile, auth); rosterBlob = r ? JSON.parse(r.text) : null; }catch(e){ rosterBlob = null; }
+    }
+    MIN = Object.fromEntries(cfg.ministerios.map(m => [m.id, m]));
+    HOL = holidays(YEAR);
+    setStatus("");
+  }catch(e){ setStatus("No se pudo cargar el calendario", true); console.error(e); return; }
+  render();
+}
+
+function afterChange(min){
+  render();
+  if (!ONLINE){ setStatus("Vista previa: cambios solo en esta pestaña"); return; }
+  setStatus("Cambios sin guardar…");
+  clearTimeout(saveTimers[min]); saveTimers[min] = setTimeout(() => save(min), 900);
+}
+async function save(min){
+  if (!ONLINE || !token) return;
+  if (saving[min]){ saveTimers[min] = setTimeout(() => save(min), 800); return; }
+  saving[min] = true; setStatus("Guardando…");
+  const st = store[min]; st.data.actualizado = todayIso; st.data.ministerio = min;
+  const text = JSON.stringify(st.data, null, 2) + "\n", path = `${CONFIG.dataDir}/${min}.json`;
+  try{
+    st.sha = await ghPut(path, text, st.sha, `${MIN[min].nombre}: actualización ${new Date().toLocaleString("es-US")}`);
+    st.base = text; setStatus("Guardado ✓");
+  }catch(e){
+    if (e.status === 409 || e.status === 422){
+      try{
+        const f = await ghGet(path, true), remote = JSON.parse(f.text);
+        const merged = mergeEvents(st.base ? JSON.parse(st.base) : { eventos: [] }, st.data, remote);
+        const mtext = JSON.stringify(merged, null, 2) + "\n";
+        st.sha = await ghPut(path, mtext, f.sha, `${MIN[min].nombre}: actualización (combinada)`);
+        st.data = merged; st.base = mtext; setStatus("Guardado ✓"); render();
+        toast("Otra persona de tu ministerio también editó. Se combinaron los cambios.", 5000);
+      }catch(e2){ setStatus("Error al guardar. Reintenta.", true); }
+    } else if (e.status === 401 || e.status === 403) setStatus("El token no tiene permiso o expiró", true);
+    else setStatus("Error al guardar. Revisa la conexión.", true);
+  }
+  saving[min] = false;
+}
+function mergeEvents(baseObj, localObj, remoteObj){
+  const map = a => new Map((a.eventos || []).map(e => [e.id, e]));
+  const B = map(baseObj), L = map(localObj), R = map(remoteObj);
+  for (const [id, e] of L){ const b = B.get(id); if (!b || JSON.stringify(b) !== JSON.stringify(e)) R.set(id, e); }
+  for (const id of B.keys()) if (!L.has(id)) R.delete(id);
+  return { ...remoteObj, actualizado: todayIso, eventos: [...R.values()].sort((a,b) => a.inicio.localeCompare(b.inicio)) };
+}
+window.addEventListener("beforeunload", e => { if (ONLINE && Object.values(saveTimers).some(Boolean) && Object.values(saving).some(Boolean)){ e.preventDefault(); e.returnValue = ""; } });
+
+/* ================= Cifrado ================= */
+const fromB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const toB64 = b => btoa(String.fromCharCode(...new Uint8Array(b)));
+async function keyFrom(pass, salt){
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name:"PBKDF2", salt, iterations: 250000, hash:"SHA-256" }, base, { name:"AES-GCM", length:256 }, false, ["encrypt","decrypt"]);
+}
+async function encryptText(txt, pass){
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, await keyFrom(pass, salt), new TextEncoder().encode(txt));
+  return { v:1, salt: toB64(salt), iv: toB64(iv), ct: toB64(ct) };
+}
+async function decryptText(blob, pass){
+  const pt = await crypto.subtle.decrypt({ name:"AES-GCM", iv: fromB64(blob.iv) }, await keyFrom(pass, fromB64(blob.salt)), fromB64(blob.ct));
+  return new TextDecoder().decode(pt);
+}
+
+/* ================= Entrar / salir ================= */
+let editorBlob = null;
+$("#loginBtn").onclick = async () => {
+  if (unlocked){
+    for (const m in saveTimers) if (saveTimers[m]){ clearTimeout(saveTimers[m]); await save(m); }
+    token = null; roster = null; unlocked = false; editing = false; myMin = null;
+    ["cm-token","cm-roster","cm-min"].forEach(k => ss.del(k)); selDate = null; render(); return;
+  }
+  if (ONLINE){
+    try{ const f = await ghGet(CONFIG.editorFile, false); editorBlob = f ? JSON.parse(f.text) : null; }
+    catch(e){ toast("No se pudo contactar a GitHub"); return; }
+    if (!editorBlob){ $("#sErr").textContent = ""; $("#setupDlg").showModal(); return; }
+  }
+  $("#lErr").textContent = ""; $("#lPass").value = ""; $("#loginDlg").showModal();
+};
+$("#lCancel").onclick = () => $("#loginDlg").close();
+$("#loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const pass = $("#lPass").value;
+  $("#lErr").textContent = "Abriendo…";
+  try{
+    if (ONLINE) token = await decryptText(editorBlob, pass);
+    roster = await openRoster(pass, !ONLINE);
+    $("#loginDlg").close();
+    await afterUnlock();
+  }catch(err){ $("#lErr").textContent = "Contraseña incorrecta."; token = null; }
+});
+async function openRoster(pass, strict){
+  if (!rosterBlob){ if (strict) throw new Error("sin lista"); return null; }
+  try{ return JSON.parse(await decryptText(rosterBlob, pass)).personas; }
+  catch(e){ if (strict) throw e; toast("La lista de equipos no abrió con esta contraseña. Revisa que el secreto EDIT_PASSWORD sea la misma.", 7000); return null; }
+}
+async function afterUnlock(){
+  unlocked = true;
+  if (token) ss.set("cm-token", token);
+  if (roster) ss.set("cm-roster", JSON.stringify(roster));
+  if (ONLINE) await load(); else render();
+  pickMinistry();
+}
+function pickMinistry(){
+  $("#minPick").innerHTML = cfg.ministerios.map((m,i) => `<label><input type="radio" name="min" value="${m.id}" ${(myMin ? myMin === m.id : i === 0) ? "checked" : ""}><span class="dot" style="background:${m.color};width:14px;height:14px"></span>${esc(m.nombre)}<span style="margin-left:auto;color:var(--muted);font-weight:500;font-size:12px">${m.equipos.map(t => esc(t.id)).join(" · ")}</span></label>`).join("");
+  $("#minDlg").showModal();
+}
+$("#minForm").addEventListener("submit", e => {
+  e.preventDefault();
+  myMin = $("#minPick").querySelector("input:checked").value; editing = true; ss.set("cm-min", myMin);
+  $("#minDlg").close(); render(); toast(`Editando ${MIN[myMin].nombre}. Los cambios se guardan solos.`);
+});
+$("#mCancel").onclick = () => { $("#minDlg").close(); editing = false; myMin = null; ss.del("cm-min"); render(); };
+$("#switchMinBtn").onclick = pickMinistry;
+$("#sCancel").onclick = () => $("#setupDlg").close();
+$("#setupForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const tok = $("#sTok").value.trim(), p1 = $("#sPass").value, p2 = $("#sPass2").value;
+  if (p1 !== p2){ $("#sErr").textContent = "Las contraseñas no coinciden."; return; }
+  $("#sErr").textContent = "Verificando token…";
+  try{
+    const blob = await encryptText(tok, p1);
+    await ghPut(CONFIG.editorFile, JSON.stringify(blob, null, 2) + "\n", null, "Configurar edición del calendario de ministerios", tok);
+    token = tok; editorBlob = blob; roster = await openRoster(p1, false);
+    $("#setupDlg").close(); await afterUnlock();
+  }catch(err){ $("#sErr").textContent = "El token no funcionó. Revisa que tenga Contents: Read and write sobre este repo."; }
+});
+
+/* ================= Interfaz ================= */
+function setStatus(t, bad){ const s = $("#status"); s.textContent = t; s.classList.toggle("bad", !!bad); }
+let toastT = null;
+function toast(t, ms = 3500){ let el = $(".toast"); if (!el){ el = document.createElement("div"); el.className = "toast"; document.body.appendChild(el); } el.textContent = t; el.style.display = "block"; clearTimeout(toastT); toastT = setTimeout(() => el.style.display = "none", ms); }
+$("#prevM").onclick = () => { month = (month + 11) % 12; render(); };
+$("#nextM").onclick = () => { month = (month + 1) % 12; render(); };
+$("#vMes").onclick = () => { view = "mes"; ls.set("cm-view", view); render(); };
+$("#vLista").onclick = () => { view = "lista"; ls.set("cm-view", view); render(); };
+if (ls.get("cm-view")) view = ls.get("cm-view");
+if (PREVIEW) $("#previewNote").classList.remove("hide");
+
+(async () => {
+  token = ss.get("cm-token");
+  const r = ss.get("cm-roster"); if (r){ try{ roster = JSON.parse(r); }catch(e){} }
+  if (token || (r && !ONLINE)) unlocked = true;
+  await load();
+  const m = ss.get("cm-min"); if (unlocked && m && MIN[m]){ myMin = m; editing = true; render(); }
+})();
+</script>
+</body>
+</html>

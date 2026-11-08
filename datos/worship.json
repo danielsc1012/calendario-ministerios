@@ -1,0 +1,10 @@
+{
+  "ministerio": "worship",
+  "actualizado": "2026-11-06",
+  "eventos": [
+    { "id": "w-ensamble", "nombre": "Ensamble", "inicio": "2027-01-05", "fin": "2027-01-05",
+      "todoElDia": false, "horaInicio": "19:00", "horaFin": "20:30",
+      "repetir": { "tipo": "semanal", "hasta": "2027-12-28" }, "excepto": [],
+      "equipos": ["Band", "Vocals", "Sound"], "lugar": "Santuario", "notas": "", "tentativo": false }
+  ]
+}
